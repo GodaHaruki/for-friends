@@ -119,19 +119,25 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
   std::vector<pos> history;
 
   int left_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
-
+  
   for(int i = 0; i < min_distances.size(); i++){
     if(min_distances[i].first != 0){
-      for(int h = min_distances[i].second.first; h < connected[i].first; h++){
+      for(int h = min_distances[i].second.first; h != connected[i].first;){
         map[h][current.second] = true;
         current.first = h;
         left_dig--;
+
+        if(h > connected[i].first) h--;
+        else h++;
       }
 
-      for(int w = min_distances[i].second.second; w < connected[i].second; w++){
+      for(int w = min_distances[i].second.second; w != connected[i].second;){
         map[current.first][w] = true;
         current.second = w;
         left_dig--;
+
+        if(w > connected[i].second) w--;
+        else w++;
       }
     }
   }
