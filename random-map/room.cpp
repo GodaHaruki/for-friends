@@ -40,6 +40,8 @@ int distance(pos const pos1, pos const pos2){
 }
 
 int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, std::vector<std::vector<bool>>& map, std::vector<std::pair<int, pos>>& min_distances, const std::vector<pos>& connected){
+  std::cout << "dig_inner" << std::endl;
+  
   std::vector<int> d(min_distances.size());
   for(int i = 0; i < min_distances.size(); i++){
     d[i] = min_distances[i].first;
@@ -49,7 +51,8 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     return can_dig; // 末尾再帰最適化が働くか怪しいから後で書き直す
   }
 
-  map[current.first][current.second] = true;
+  map.at(current.first).at(current.second) = true; // atに変えたらここで落ちてるのがわかった
+  
   history.push_back(current);
 
   auto c = connected[0];
@@ -62,10 +65,13 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
 
   pos new_pos = {-1, -1};
 
+  // path選択のところに実装ミスがあると思う
   auto paths = get_paths(current, map);
   if(paths.size() != 0){
+    std::cout << "found path" << std::endl;
     auto path = paths[mt() % paths.size()];
     
+    std::cout << "selected path" << std::endl;
     switch(path){
       case direction::up:
         new_pos = {current.first + 1, current.second};
@@ -81,7 +87,10 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
         break;
     }
   } else {
+    // not foundの方に実装ミスある説が濃厚
+    std::cout << "path not found" << std::endl;
     for(int i = history.size() -1; i >= 0; i--){
+      std::cout << "history_backed" << std::endl;
       paths = get_paths(history[i], map);
       if(paths.size() != 0){
         auto path = paths[mt() % paths.size()];
@@ -106,11 +115,6 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     }
   }
 
-  if(new_pos.first == -1){
-    std::cerr << "err in dig_inner" << std::endl;
-    return -1;
-  }
-
   return dig_inner(new_pos, can_dig -1, history, map, min_distances, connected);
 }
 
@@ -119,7 +123,7 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
   std::vector<pos> history;
 
   int left_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
-  
+
   for(int i = 0; i < min_distances.size(); i++){
     if(min_distances[i].first != 0){
       for(int h = min_distances[i].second.first; h != connected[i].first;){
