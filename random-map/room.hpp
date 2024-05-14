@@ -7,4 +7,6 @@ class room {
     const int _width, _height, _block;
   public:
     room(const int width, const int height, const int block, const std::vector<std::pair<int, int>>& connected);
+
+    void show() const;
 };
