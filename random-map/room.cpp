@@ -54,14 +54,8 @@ int distance(pos const pos1, pos const pos2){
 
 int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, std::vector<std::vector<bool>>& map, std::vector<std::pair<int, pos>>& min_distances, const std::vector<pos>& connected){
   std::cout << "dig_inner" << std::endl;
-  
-  std::vector<int> d(min_distances.size());
-  for(int i = 0; i < min_distances.size(); i++){
-    d[i] = min_distances[i].first;
-  }
-
-  if(can_dig - std::accumulate(d.begin(), d.end(), 0) <= 0){
-    return can_dig; // 末尾再帰最適化が働くか怪しいから後で書き直す
+  if(can_dig - std::accumulate(min_distances.begin(), min_distances.end(), 0) <= 0){
+    return can_dig;
   }
 
   map.at(current.first).at(current.second) = true; // atに変えたらここで落ちてるのがわかった
