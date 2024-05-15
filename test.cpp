@@ -26,7 +26,7 @@ int main(){
   std::vector<std::pair<int, int>> c;
   c.push_back({0, 0});
 
-  for(int i = 0; i < 250; i++){
+  for(int i = 1; i < 250; i++){
     std::cout << i << std::endl;
     room r(i, i, i * i / 2, c);
   }
