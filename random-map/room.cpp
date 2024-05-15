@@ -16,6 +16,19 @@ enum direction {
   right,
 };
 
+pos get_pos(pos current, direction d){
+  switch(d){
+      case direction::up:
+        return {current.first + 1, current.second};
+      case direction::down:
+        return {current.first -1, current.second};
+      case direction::left:
+        return {current.first, current.second -1};
+      case direction::right:
+        return {current.first, current.second +1};
+    }
+}
+
 std::vector<direction> get_paths(pos const current, const std::vector<std::vector<bool>>& map){
   std::vector<direction> directions;
 
@@ -69,23 +82,10 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
   auto paths = get_paths(current, map);
   if(paths.size() != 0){
     std::cout << "found path" << std::endl;
-    auto path = paths[mt() % paths.size()];
+    auto d = paths[mt() % paths.size()];
     
     std::cout << "selected path" << std::endl;
-    switch(path){
-      case direction::up:
-        new_pos = {current.first + 1, current.second};
-        break;
-      case direction::down:
-        new_pos = {current.first -1, current.second};
-        break;
-      case direction::left:
-        new_pos = {current.first, current.second -1};
-        break;
-      case direction::right:
-        new_pos = {current.first, current.second +1};
-        break;
-    }
+    new_pos = get_pos(current, d);
   } else {
     // not foundの方に実装ミスある説が濃厚
     std::cout << "path not found" << std::endl;
@@ -93,23 +93,8 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
       std::cout << "history_backed" << std::endl;
       paths = get_paths(history[i], map);
       if(paths.size() != 0){
-        auto path = paths[mt() % paths.size()];
-    
-        switch(path){
-          case direction::up:
-            new_pos = {current.first + 1, current.second};
-            break;
-          case direction::down:
-            new_pos = {current.first -1, current.second};
-            break;
-          case direction::left:
-            new_pos = {current.first, current.second -1};
-            break;
-          case direction::right:
-            new_pos = {current.first, current.second +1};
-           break;
-        }
-
+        auto d = paths[mt() % paths.size()];
+        new_pos = get_pos(current, d);
         break;
       }
     }
