@@ -10,10 +10,6 @@ int main(){
   connected.push_back({19, 19});
   // connectedを2つ以外にするとセグフォ起きる
 
-  room r(20, 20, 100, connected);
-
-  r.show();
-
   room r2(23, 37, 63, connected);
 
   r2.show();
