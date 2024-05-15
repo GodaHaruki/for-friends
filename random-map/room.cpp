@@ -87,14 +87,14 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     std::cout << "path not found" << std::endl;
     for(int i = history.size() -1; i >= 0; i--){
       std::cout << "history_backed" << std::endl;
-      if(history[i].first == -1 || history[i].second == -i){
+      if(history[i].first == -1 || history[i].second == -1){
         continue;
       }
       
       paths = get_paths(history[i], map);
       if(paths.size() != 0){
         auto d = paths[mt() % paths.size()];
-        new_pos = get_pos(current, d);
+        new_pos = get_pos(history[i], d);
         break;
       }
     }
