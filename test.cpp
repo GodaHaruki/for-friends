@@ -13,4 +13,14 @@ int main(){
   room r(20, 20, 100, connected);
 
   r.show();
+
+  room r2(23, 37, 63, connected);
+
+  r2.show();
+
+  connected.push_back({20, 20});
+  connected.push_back({18, 13});
+  room r3(34, 28, 43, connected);
+
+  r3.show();
 }
