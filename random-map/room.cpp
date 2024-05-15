@@ -34,16 +34,16 @@ pos get_pos(pos current, direction d){
 std::vector<direction> get_paths(pos const current, const std::vector<std::vector<bool>>& map){
   std::vector<direction> directions;
 
-  if(current.first -1 > 0 && !map[current.first -1][current.second]){
+  if(current.first -1 > 0 && !map.at(current.first -1).at(current.second)){
     directions.push_back(direction::down);
   }
-  if(current.first +1 < map.size() && !map[current.first +1][current.second]){
+  if(current.first +1 < map.size() && !map.at(current.first +1).at(current.second)){
     directions.push_back(direction::up);
   }
-  if(current.second -1 > 0 && !map[current.first][current.second -1]){
+  if(current.second -1 > 0 && !map.at(current.first).at(current.second -1)){
     directions.push_back(direction::left);
   }
-  if(current.second +1 < map.size() && !map[current.first][current.second +1]){
+  if(current.second +1 < map.size() && !map.at(current.first).at(current.second +1)){
     directions.push_back(direction::right);
   }
 
@@ -64,9 +64,9 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
   
   history.push_back(current);
 
-  auto c = connected[0];
+  auto c = connected.at(0);
   for(int i = 0; i < connected.size(); i++){
-    min_distances[i] = distance(c, connected[i]);
+    min_distances.at(i) = distance(c, connected.at(i));
   }
 
   std::random_device rd;
@@ -78,7 +78,7 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
   auto paths = get_paths(current, map);
   if(paths.size() != 0){
     std::cout << "found path" << std::endl;
-    auto d = paths[mt() % paths.size()];
+    auto d = paths.at(mt() % paths.size());
     
     std::cout << "selected path" << std::endl;
     new_pos = get_pos(current, d);
@@ -87,14 +87,14 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     std::cout << "path not found" << std::endl;
     for(int i = history.size() -1; i >= 0; i--){
       std::cout << "history_backed" << std::endl;
-      if(history[i].first == -1 || history[i].second == -1){
+      if(history.at(i).first == -1 || history.at(i).second == -1){
         continue;
       }
       
-      paths = get_paths(history[i], map);
+      paths = get_paths(history.at(i), map);
       if(paths.size() != 0){
-        auto d = paths[mt() % paths.size()];
-        new_pos = get_pos(history[i], d);
+        auto d = paths.at(mt() % paths.size());
+        new_pos = get_pos(history.at(i), d);
         break;
       }
     }
@@ -116,13 +116,13 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
   can_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
 
   for(int i = 0; i < min_distances.size(); i++){
-    if(min_distances[i] != 0){
+    if(min_distances.at(i) != 0){
       // 通路と通路を最短経路で繋ぐ
 
       pos nearest_pos = {-1, -1};
       for(int h = 0; h < map.size(); h++){
-        for(int w = 0; w < map[0].size(); w++){
-          if(distance({h, w}, connected[i]) == min_distances[i]){
+        for(int w = 0; w < map.at(0).size(); w++){
+          if(distance({h, w}, connected.at(i)) == min_distances.at(i)){
             nearest_pos = {h, w};
             break;
           }
@@ -134,24 +134,24 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
       };
 
       current = nearest_pos;
-      while(current.first != connected[i].first || current.second != connected[i].second){
-        if(current.first > connected[i].first){
+      while(current.first != connected.at(i).first || current.second != connected.at(i).second){
+        if(current.first > connected.at(i).first){
           current.first--;
-          map[current.first][current.second] = true;
+          map.at(current.first).at(current.second) = true;
           can_dig--;
-        } else if(current.first < connected[i].first) {
+        } else if(current.first < connected.at(i).first) {
           current.first++;
-          map[current.first][current.second] = true;
+          map.at(current.first).at(current.second) = true;
           can_dig--;
         }
 
-        if(current.second > connected[i].second){
+        if(current.second > connected.at(i).second){
           current.second--;
-          map[current.first][current.second] = true;
+          map.at(current.first).at(current.second) = true;
           can_dig--;
-        } else if(current.second < connected[i].second) {
+        } else if(current.second < connected.at(i).second) {
           current.second++;
-          map[current.first][current.second] = true;
+          map.at(current.first).at(current.second) = true;
           can_dig--;
         }
       }
@@ -166,13 +166,13 @@ room::room(const int width, const int height, const int block, const std::vector
   _map = std::vector<std::vector<bool>>(height, std::vector<bool>(width, false));
   int can_dig = width * height - block;
 
-  dig(connected[0], can_dig, _map, connected);
+  dig(connected.at(0), can_dig, _map, connected);
 }
 
 void room::show() const{
   for(int h = 0; h < _height; h++){
     for(int w = 0; w < _width; w++){
-      if(_map[h][w]){
+      if(_map.at(h).at(w)){
         std::cout << '.';
       } else {
         std::cout << '@';
