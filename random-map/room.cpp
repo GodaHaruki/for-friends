@@ -111,11 +111,48 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
   std::vector<int> min_distances(connected.size(), INT32_MAX);
   std::vector<pos> history(can_dig, {-1, -1});
 
-  int left_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
+  can_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
 
   for(int i = 0; i < min_distances.size(); i++){
     if(min_distances[i] != 0){
       // 通路と通路を最短経路で繋ぐ
+
+      pos nearest_pos = {-1, -1};
+      for(auto line : map){
+        for(auto p : line){
+          if(distance(p, connected[i]) == min_distances[i]){
+            nearest_pos = p;
+            break;
+          }
+        };
+
+        if(nearest_pos.first != -1 && nearest_pos.second != -1){
+          break;
+        }
+      };
+
+      current = nearest_pos;
+      while(current.first != connected[i].first || current.second != connected[i].second){
+        if(current.first > connected[i].first){
+          current.first--;
+          map[current.first][current.second] = true;
+          can_dig--;
+        } else if(current.first < connected[i].first) {
+          current.first++;
+          map[current.first][current.second] = true;
+          can_dig--;
+        }
+
+        if(current.second > connected[i].second){
+          current.second--;
+          map[current.first][current.second] = true;
+          can_dig--;
+        } else if(current.second < connected[i].second) {
+          current.second++;
+          map[current.first][current.second] = true;
+          can_dig--;
+        }
+      }
     }
   }
 }
