@@ -43,7 +43,7 @@ std::vector<direction> get_paths(pos const current, const std::vector<std::vecto
   if(current.second -1 > 0 && !map.at(current.first).at(current.second -1)){
     directions.push_back(direction::left);
   }
-  if(current.second +1 < map.size() && !map.at(current.first).at(current.second +1)){
+  if(current.second +1 < map.at(0).size() && !map.at(current.first).at(current.second +1)){
     directions.push_back(direction::right);
   }
 
