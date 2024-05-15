@@ -18,15 +18,17 @@ enum direction {
 
 pos get_pos(pos current, direction d){
   switch(d){
-      case direction::up:
-        return {current.first + 1, current.second};
-      case direction::down:
-        return {current.first -1, current.second};
-      case direction::left:
-        return {current.first, current.second -1};
-      case direction::right:
-        return {current.first, current.second +1};
-    }
+    case direction::up:
+      return {current.first + 1, current.second};
+    case direction::down:
+      return {current.first -1, current.second};
+    case direction::left:
+      return {current.first, current.second -1};
+    case direction::right:
+      return {current.first, current.second +1};
+  }
+
+  return current; // unreachable
 }
 
 std::vector<direction> get_paths(pos const current, const std::vector<std::vector<bool>>& map){
@@ -64,7 +66,7 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
 
   auto c = connected[0];
   for(int i = 0; i < connected.size(); i++){
-    min_distances[i] = {distance(c, connected[i]), c};
+    min_distances[i] = distance(c, connected[i]);
   }
 
   std::random_device rd;
