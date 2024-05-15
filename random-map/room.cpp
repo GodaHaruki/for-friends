@@ -52,7 +52,7 @@ int distance(pos const pos1, pos const pos2){
   return abs(pos1.first - pos2.first) + abs(pos1.second - pos2.second);
 }
 
-int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, std::vector<std::vector<bool>>& map, std::vector<std::pair<int, pos>>& min_distances, const std::vector<pos>& connected){
+int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, std::vector<std::vector<bool>>& map, std::vector<int>& min_distances, const std::vector<pos>& connected){
   std::cout << "dig_inner" << std::endl;
   if(can_dig - std::accumulate(min_distances.begin(), min_distances.end(), 0) <= 0){
     return can_dig;
