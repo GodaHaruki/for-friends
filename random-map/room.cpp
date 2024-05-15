@@ -118,10 +118,10 @@ void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const st
       // 通路と通路を最短経路で繋ぐ
 
       pos nearest_pos = {-1, -1};
-      for(auto line : map){
-        for(auto p : line){
-          if(distance(p, connected[i]) == min_distances[i]){
-            nearest_pos = p;
+      for(int h = 0; h < map.size(); h++){
+        for(int w = 0; w < map[0].size(); w++){
+          if(distance({h, w}, connected[i]) == min_distances[i]){
+            nearest_pos = {h, w};
             break;
           }
         };
