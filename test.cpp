@@ -23,7 +23,11 @@ int main(){
 
   r3.show();
 
-  room r4(200, 200, 20000, connected);
+  std::vector<std::pair<int, int>> const int _width, _height, _block;
+  c.push_back({0, 0});
 
-  r4.show();
+  for(int i = 0; i < 250; i++){
+    std::cout << i << std::endl;
+    room r(i, i, i * i / 2, c);
+  }
 }
