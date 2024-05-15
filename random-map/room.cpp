@@ -91,6 +91,10 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     std::cout << "path not found" << std::endl;
     for(int i = history.size() -1; i >= 0; i--){
       std::cout << "history_backed" << std::endl;
+      if(history[i].first == -1 || history[i].second == -i){
+        continue;
+      }
+      
       paths = get_paths(history[i], map);
       if(paths.size() != 0){
         auto d = paths[mt() % paths.size()];
@@ -110,30 +114,14 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
 }
 
 void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const std::vector<pos>& connected){
-  std::vector<std::pair<int, pos>> min_distances(connected.size(), {INT32_MAX, {-1, -1}});
-  std::vector<pos> history;
+  std::vector<int> min_distances(connected.size(), INT32_MAX);
+  std::vector<pos> history(can_dig, {-1, -1});
 
   int left_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
 
   for(int i = 0; i < min_distances.size(); i++){
-    if(min_distances[i].first != 0){
-      for(int h = min_distances[i].second.first; h != connected[i].first;){
-        map[h][current.second] = true;
-        current.first = h;
-        left_dig--;
-
-        if(h > connected[i].first) h--;
-        else h++;
-      }
-
-      for(int w = min_distances[i].second.second; w != connected[i].second;){
-        map[current.first][w] = true;
-        current.second = w;
-        left_dig--;
-
-        if(w > connected[i].second) w--;
-        else w++;
-      }
+    if(min_distances[i] != 0){
+      // 通路と通路を最短経路で繋ぐ
     }
   }
 }
