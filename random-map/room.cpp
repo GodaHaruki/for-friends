@@ -55,12 +55,10 @@ int distance(pos const pos1, pos const pos2){
 }
 
 int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, std::vector<std::vector<bool>>& map, std::vector<int>& min_distances, const std::vector<pos>& connected){
-  std::cout << "dig_inner" << std::endl;
   if(can_dig - std::accumulate(min_distances.begin(), min_distances.end(), 0) <= 0){
     return can_dig;
   }
 
-  std::cout << "dig" << std::endl;
   map.at(current.first).at(current.second) = true; // atに変えたらここで落ちてるのがわかった
   
   for(auto& h : history){
@@ -81,20 +79,13 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
   std::mt19937 mt(rd());
 
   pos new_pos = {-1, -1};
-
-  // path選択のところに実装ミスがあると思う
   auto paths = get_paths(current, map);
+  
   if(paths.size() != 0){
-    std::cout << "found path" << std::endl;
     auto d = paths.at(mt() % paths.size());
-    
-    std::cout << "selected path" << std::endl;
     new_pos = get_pos(current, d);
   } else {
-    // not foundの方に実装ミスある説が濃厚
-    std::cout << "path not found" << std::endl;
     for(int i = history.size() -1; i >= 0; i--){
-      std::cout << "history_backed" << std::endl;
       if(history.at(i).first == -1 || history.at(i).second == -1){
         continue;
       }
