@@ -23,7 +23,7 @@ int main(){
 
   r3.show();
 
-  std::vector<std::pair<int, int>> const int _width, _height, _block;
+  std::vector<std::pair<int, int>> c;
   c.push_back({0, 0});
 
   for(int i = 0; i < 250; i++){
