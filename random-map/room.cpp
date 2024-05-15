@@ -115,6 +115,12 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     }
   }
 
+  if(new_pos.first == -1 || new_pos.second == -1){ // pathがどこにも無かったら(全てのマスを掘り切ったら)
+    std::cout << (can_dig == 0 ? "ok" : "error") << std::endl;
+
+    return can_dig -1;
+  }
+
   return dig_inner(new_pos, can_dig -1, history, map, min_distances, connected);
 }
 
