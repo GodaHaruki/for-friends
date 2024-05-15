@@ -73,7 +73,8 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
   auto c = connected.at(0);
   for(int i = 0; i < connected.size(); i++){
     if(min_distances.at(i) < distance(c, connected.at(i)) || min_distances.at(i) == -1){
-     min_distances.at(i) = distance(c, connected.at(i)); 
+      min_distances.at(i) = distance(c, connected.at(i));
+    }
   }
 
   std::random_device rd;
