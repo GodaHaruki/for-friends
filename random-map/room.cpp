@@ -33,7 +33,7 @@ pos get_pos(pos current, direction d){
 
 std::vector<direction> get_paths(pos const current, const std::vector<std::vector<bool>>& map){
   std::vector<direction> directions;
-
+  
   if(current.first -1 > 0 && !map.at(current.first -1).at(current.second)){
     directions.push_back(direction::down);
   }
@@ -60,13 +60,20 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
     return can_dig;
   }
 
+  std::cout << "dig" << std::endl;
   map.at(current.first).at(current.second) = true; // atに変えたらここで落ちてるのがわかった
   
-  history.push_back(current);
+  for(auto& h : history){
+    if(h.first == -1 && h.second == -1){
+      h = current;
+      break;
+    }
+  }
 
   auto c = connected.at(0);
   for(int i = 0; i < connected.size(); i++){
-    min_distances.at(i) = distance(c, connected.at(i));
+    if(min_distances.at(i) < distance(c, connected.at(i)) || min_distances.at(i) == -1){
+     min_distances.at(i) = distance(c, connected.at(i)); 
   }
 
   std::random_device rd;
@@ -110,7 +117,7 @@ int dig_inner(pos const current, int const can_dig, std::vector<pos>& history, s
 }
 
 void dig(pos current, int can_dig, std::vector<std::vector<bool>>& map, const std::vector<pos>& connected){
-  std::vector<int> min_distances(connected.size(), INT32_MAX);
+  std::vector<int> min_distances(connected.size(), -1);
   std::vector<pos> history(can_dig, {-1, -1});
 
   can_dig = dig_inner(current, can_dig, history, map, min_distances, connected);
